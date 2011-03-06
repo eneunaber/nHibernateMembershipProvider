@@ -164,18 +164,7 @@ namespace nHibernate.Membership.Provider
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            var userCollection = new MembershipUserCollection();
-            var users = _repository.GetQueryableList<User>(new FindUsersByNameQuery("", "")); //need a test to make me implement correctly
-            users.ToList().ForEach(user =>
-                                   userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
-                                                                          user.Username, user.Id, user.Email,
-                                                                          user.PasswordQuestion, user.Comment,
-                                                                          user.IsApproved, user.IsLockedOut,
-                                                                          user.CreationDate, user.LastLoginDate,
-                                                                          user.LastActivityDate,
-                                                                          user.LastPasswordChangedDate,
-                                                                          user.LastLockedOutDate))
-                );
+            var userCollection = FindUsersByQuery(new FindUsersByNameQuery("", ""));
             totalRecords = userCollection.Count;
             return userCollection;
         }
@@ -183,8 +172,15 @@ namespace nHibernate.Membership.Provider
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
                                                                   out int totalRecords)
         {
+            var userCollection = FindUsersByQuery(new FindUsersByEmailQuery("", ""));
+            totalRecords = userCollection.Count;
+            return userCollection;
+        }
+
+        private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
+        {
             var userCollection = new MembershipUserCollection();
-            var users = _repository.GetQueryableList<User>(new FindUsersByEmailQuery("", "")); //need a test to make me implement correctly
+            var users = _repository.GetQueryableList<User>(query); //need a test to make me implement correctly
             users.ToList().ForEach(user =>
                                    userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
                                                                           user.Username, user.Id, user.Email,
@@ -195,8 +191,6 @@ namespace nHibernate.Membership.Provider
                                                                           user.LastPasswordChangedDate,
                                                                           user.LastLockedOutDate))
                 );
-
-            totalRecords = userCollection.Count;
             return userCollection;
         }
         #endregion
