@@ -164,7 +164,20 @@ namespace nHibernate.Membership.Provider
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            throw new NotImplementedException();
+            var userCollection = new MembershipUserCollection();
+            var users = _repository.GetQueryableList<User>(new FindUsersByNameQuery("", "")); //need a test to make me implement correctly
+            users.ToList().ForEach(user =>
+                                   userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
+                                                                          user.Username, user.Id, user.Email,
+                                                                          user.PasswordQuestion, user.Comment,
+                                                                          user.IsApproved, user.IsLockedOut,
+                                                                          user.CreationDate, user.LastLoginDate,
+                                                                          user.LastActivityDate,
+                                                                          user.LastPasswordChangedDate,
+                                                                          user.LastLockedOutDate))
+                );
+            totalRecords = userCollection.Count;
+            return userCollection;
         }
 
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
