@@ -1,0 +1,31 @@
+﻿
+/******************
+* App Config Membership Provider
+******************/
+http://elegantcode.com/2010/10/22/basic-javascript-part-1-functions/
+http://stackoverflow.com/questions/76781/how-do-i-tdd-a-custom-membership-provider-and-custom-membership-user
+http://irwinj.blogspot.com/2010/07/aspnet-mvc-membership-provider-issues.html
+http://aedenjameson.blogspot.com/2009/04/unit-testing-custom-membership-provider.html
+
+
+
+/******************
+* Manual Config Membership Provider
+******************/
+http://geekswithblogs.net/AzamSharp/archive/2007/10/30/116467.aspx
+NameValueCollection config = new NameValueCollection();
+config.Add("applicationName", "UnitTest");
+config.Add("name", "nHibernateMembershipProvider");
+config.Add("connectionStringName", "MyConnectionString");
+config.Add("requiresQuestionAndAnswer", "false");
+config.Add("type", "nHibernate.Membership.Provider.nHibernateMembershipProvider, nHibernate.Membership.Provider");
+
+testObject.Initialize(config["name"], config);
+
+
+/******************
+* Reflection Config Membership Provider
+******************/
+System.Web.Security.Membership.Providers
+
+
