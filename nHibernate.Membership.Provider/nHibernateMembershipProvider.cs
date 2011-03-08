@@ -158,13 +158,16 @@ namespace nHibernate.Membership.Provider
 
         public override int GetNumberOfUsersOnline()
         {
-            throw new NotImplementedException();
+            //var onlineSpan = new TimeSpan(0, System.Web.Security.Membership.UserIsOnlineTimeWindow, 0);
+            //DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
+            var usersCurrentlyOnline = _repository.GetQueryableList<User>(new UsersLastActivityQuery(DateTime.Now, "")); //need a test to make me implement correctly
+            return usersCurrentlyOnline.Distinct().Count();
         }
 
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(new FindUsersByNameQuery("", ""));
+            var userCollection = FindUsersByQuery(new FindUsersByNameQuery("", "")); //need a test to make me implement correctly
             totalRecords = userCollection.Count;
             return userCollection;
         }
@@ -172,7 +175,7 @@ namespace nHibernate.Membership.Provider
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
                                                                   out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(new FindUsersByEmailQuery("", ""));
+            var userCollection = FindUsersByQuery(new FindUsersByEmailQuery("", "")); //need a test to make me implement correctly
             totalRecords = userCollection.Count;
             return userCollection;
         }
@@ -180,7 +183,7 @@ namespace nHibernate.Membership.Provider
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
         {
             var userCollection = new MembershipUserCollection();
-            var users = _repository.GetQueryableList<User>(query); //need a test to make me implement correctly
+            var users = _repository.GetQueryableList<User>(query); 
             users.ToList().ForEach(user =>
                                    userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
                                                                           user.Username, user.Id, user.Email,
