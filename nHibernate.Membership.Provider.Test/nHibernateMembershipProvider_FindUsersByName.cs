@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using NHibernate;
 using nHibernate.Membership.Provider.Entities;
 using nHibernate.Membership.Provider.Queries;
+using NHibernate;
 using Xunit;
 
 namespace nHibernate.Membership.Provider.Test
@@ -37,7 +35,7 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void FindUsersByEmail_Transforms_Results_Into_a_MembershipCollection()
+        public void FindUsersByName_Transforms_Results_Into_a_MembershipCollection()
         {
             var totalRecords = 0;
             IQueryable<User> valueFunction = TestDataHelper.CreateUserListForNameSearch();
@@ -74,6 +72,5 @@ namespace nHibernate.Membership.Provider.Test
             Assert.Equal<int>(3, totalRecords);
             Assert.Equal<int>(result.Count, totalRecords);
         }
-
     }
 }

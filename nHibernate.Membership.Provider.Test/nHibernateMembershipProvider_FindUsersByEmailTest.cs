@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using NHibernate;
 using nHibernate.Membership.Provider.Entities;
 using nHibernate.Membership.Provider.Queries;
+using NHibernate;
 using Xunit;
 
 namespace nHibernate.Membership.Provider.Test
