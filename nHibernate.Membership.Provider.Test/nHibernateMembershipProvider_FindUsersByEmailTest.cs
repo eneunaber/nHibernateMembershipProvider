@@ -3,27 +3,12 @@ using System.Linq;
 using Moq;
 using nHibernate.Membership.Provider.Entities;
 using nHibernate.Membership.Provider.Queries;
-using NHibernate;
 using Xunit;
 
 namespace nHibernate.Membership.Provider.Test
 {
-    public class nHibernateMembershipProvider_FindUsersByEmailTest : InMemoryDatabaseTest
+    public class nHibernateMembershipProvider_FindUsersByEmailTest : nHibernateMembershipProviderTestBase
     {
-        private Mock<IRepository> _repository;
-        private Mock<ISession> _session;
-        private nHibernateMembershipProvider testObject;
-
-
-        public nHibernateMembershipProvider_FindUsersByEmailTest()
-            : base(typeof (nHibernateMembershipProvider).Assembly)
-        {
-            _repository = new Mock<IRepository>();
-            _session = new Mock<ISession>();
-            testObject  = new nHibernateMembershipProvider(_repository.Object);
-
-        }
-
         [Fact] //Would like test to prove exact object
         public void FindUsersByEmail_Creates_a_FindUsersByEmailQuery_and_Passes_it_to_Repository()
         {
@@ -39,8 +24,8 @@ namespace nHibernate.Membership.Provider.Test
         public void FindUsersByEmail_Transforms_Results_Into_a_MembershipCollection()
         {
             var totalRecords = 0;
-            IQueryable<User> valueFunction = TestDataHelper.CreateUserListForEmailSearch();
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>())).Returns(valueFunction);
+            IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>())).Returns(userList);
 
             var result = testObject.FindUsersByEmail("a@b.com", 0, 0, out totalRecords);
 
@@ -54,8 +39,8 @@ namespace nHibernate.Membership.Provider.Test
         public void FindUsersByEmail_Returns_an_Empty_Collection_if_No_Matches_are_Found()
         {
             var totalRecords = 0;
-            IQueryable<User> valueFunction = (new List<User>()).AsQueryable();
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>())).Returns(valueFunction);
+            IQueryable<User> userList = (new List<User>()).AsQueryable();
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>())).Returns(userList);
 
             var result = testObject.FindUsersByEmail("asdfasf@b.com", 0, 0, out totalRecords);
 
@@ -66,8 +51,8 @@ namespace nHibernate.Membership.Provider.Test
         public void FindUsersByEmail_Sets_TotalRecords_Equal_to_Number_of_Records_Returned()
         {
             var totalRecords = 0;
-            IQueryable<User> valueFunction = TestDataHelper.CreateUserListForEmailSearch();
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>())).Returns(valueFunction);
+            IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>())).Returns(userList);
 
             var result = testObject.FindUsersByEmail("a@b.com", 0, 0, out totalRecords);
 

@@ -10,10 +10,7 @@ namespace nHibernate.Membership.Provider.Test.Queries
         [Fact]
         public void UsersLastActivityQuery_Correctly_Builds_Expression()
         {
-            var lastActivityDate = DateTime.Now;
-            var applicationName = "myApp";
-
-            var testObject = new UsersLastActivityQuery(lastActivityDate, applicationName);
+            var testObject = new UsersLastActivityQuery( DateTime.Now, "myApp");
 
             var exp = testObject.MatchingCriteria;
             Expression body = exp.Body;

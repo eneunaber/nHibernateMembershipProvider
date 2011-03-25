@@ -1,7 +1,6 @@
-﻿using nHibernate.Membership.Provider.Queries;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using nHibernate.Membership.Provider.Queries;
 using Xunit;
-using System;
 
 namespace nHibernate.Membership.Provider.Test.Queries
 {
@@ -11,10 +10,7 @@ namespace nHibernate.Membership.Provider.Test.Queries
         [Fact]
         public void FindUsersByEmailQuery_Correctly_Builds_Expression()
         {
-            var userName = "Fred";
-            var applicationName = "myApp";
-
-            var testObject = new FindUsersByNameQuery(userName, applicationName);
+            var testObject = new FindUsersByNameQuery("Fred", "myApp");
 
             var exp = testObject.MatchingCriteria;
             Expression body = exp.Body;

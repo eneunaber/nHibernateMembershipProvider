@@ -1,19 +1,15 @@
-﻿using nHibernate.Membership.Provider.Queries;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using nHibernate.Membership.Provider.Queries;
 using Xunit;
 
 namespace nHibernate.Membership.Provider.Test.Queries
 {
     public class FindUsersByEmailQueryTest
     {
-
         [Fact]
         public void FindUsersByEmailQuery_Correctly_Builds_Expression()
         {
-            var emailAddress = "a@b.com";
-            var applicationName = "myApp";
-
-            var testObject = new FindUsersByEmailQuery(emailAddress, applicationName);
+            var testObject = new FindUsersByEmailQuery("a@b.com", "myApp");
 
             var exp = testObject.MatchingCriteria;
             Expression body = exp.Body;

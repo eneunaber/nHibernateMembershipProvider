@@ -153,14 +153,33 @@ namespace nHibernate.Membership.Provider
 
         public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
         {
-            throw new NotImplementedException();
+            var query = new FindAllUsersQuery("");
+            var userCollection = new MembershipUserCollection();
+            var users = _repository.GetQueryableList<User>(query)
+                                    .Skip((pageIndex - 1) * pageSize)
+                                    .Take(pageSize);
+            users.ToList().ForEach(user =>
+                                   userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
+                                                                          user.Username, user.Id, user.Email,
+                                                                          user.PasswordQuestion, user.Comment,
+                                                                          user.IsApproved, user.IsLockedOut,
+                                                                          user.CreationDate, user.LastLoginDate,
+                                                                          user.LastActivityDate,
+                                                                          user.LastPasswordChangedDate,
+                                                                          user.LastLockedOutDate))
+                );
+
+            totalRecords = userCollection.Count;
+            return userCollection;
         }
 
         public override int GetNumberOfUsersOnline()
         {
-            //var onlineSpan = new TimeSpan(0, System.Web.Security.Membership.UserIsOnlineTimeWindow, 0);
-            //DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
-            var usersCurrentlyOnline = _repository.GetQueryableList<User>(new UsersLastActivityQuery(DateTime.Now, "")); //need a test to make me implement correctly
+            //Can I test these two lines
+            var onlineSpan = new TimeSpan(0, System.Web.Security.Membership.UserIsOnlineTimeWindow, 0);
+            DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
+            //
+            var usersCurrentlyOnline = _repository.GetQueryableList<User>(new UsersLastActivityQuery(compareTime, "")); //need a test to make me implement correctly
             return usersCurrentlyOnline.Distinct().Count();
         }
 
