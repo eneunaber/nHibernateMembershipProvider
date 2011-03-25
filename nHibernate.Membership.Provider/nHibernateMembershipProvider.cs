@@ -153,22 +153,7 @@ namespace nHibernate.Membership.Provider
 
         public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
         {
-            var query = new FindAllUsersQuery("");
-            var userCollection = new MembershipUserCollection();
-            var users = _repository.GetQueryableList<User>(query)
-                                    .Skip((pageIndex - 1) * pageSize)
-                                    .Take(pageSize);
-            users.ToList().ForEach(user =>
-                                   userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
-                                                                          user.Username, user.Id, user.Email,
-                                                                          user.PasswordQuestion, user.Comment,
-                                                                          user.IsApproved, user.IsLockedOut,
-                                                                          user.CreationDate, user.LastLoginDate,
-                                                                          user.LastActivityDate,
-                                                                          user.LastPasswordChangedDate,
-                                                                          user.LastLockedOutDate))
-                );
-
+            var userCollection = FindUsersByQuery(new FindAllUsersQuery(""), pageIndex, pageSize); //need a test to make me implement correctly
             totalRecords = userCollection.Count;
             return userCollection;
         }
@@ -201,8 +186,22 @@ namespace nHibernate.Membership.Provider
 
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
         {
+            var users = _repository.GetQueryableList<User>(query);
+            return BuildUserCollectionFromQueryResults(users);
+        }
+
+        private MembershipUserCollection FindUsersByQuery(QueryBase<User> query, int pageIndex, int pageSize)
+        {
+            var users = _repository.GetQueryableList<User>(query)
+                                    .Skip((pageIndex - 1) * pageSize)
+                                    .Take(pageSize);
+            return BuildUserCollectionFromQueryResults(users);
+        }
+
+
+        private static MembershipUserCollection BuildUserCollectionFromQueryResults(IQueryable<User> users)
+        {
             var userCollection = new MembershipUserCollection();
-            var users = _repository.GetQueryableList<User>(query); 
             users.ToList().ForEach(user =>
                                    userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
                                                                           user.Username, user.Id, user.Email,
