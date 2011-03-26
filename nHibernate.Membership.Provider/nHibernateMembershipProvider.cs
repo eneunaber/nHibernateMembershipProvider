@@ -186,7 +186,7 @@ namespace nHibernate.Membership.Provider
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
                                                                   out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(new FindUsersByEmailQuery("", "")); //need a test to make me implement correctly
+            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersByEmailQuery(emailToMatch, "myApp"));
             totalRecords = userCollection.Count;
             return userCollection;
         }

@@ -9,17 +9,22 @@ namespace nHibernate.Membership.Provider.Test
 {
     public class nHibernateMembershipProvider_FindUsersByEmailTest : nHibernateMembershipProviderTestBase
     {
-        [Fact] //Would like test to prove exact object
+        [Fact]
         public void FindUsersByEmail_Creates_a_FindUsersByEmailQuery_and_Passes_it_to_Repository()
         {
             var totalRecords = 0;
+            var email = "a@b.com";
+            var appName = "myApp";
+            var findUsersByEmailQuery = new FindUsersByEmailQuery(email, appName);
+            
+            _queryFactory.Setup(qf => qf.createFindUsersByEmailQuery(email, appName)).Returns(findUsersByEmailQuery);
 
-            testObject.FindUsersByEmail("a@b.com", 0, 0, out totalRecords);
 
-            _repository.Verify(r => r.GetQueryableList(It.IsAny<FindUsersByEmailQuery>()));
+            testObject.FindUsersByEmail(email, 0, 0, out totalRecords);
+
+            _repository.Verify(r => r.GetQueryableList(findUsersByEmailQuery));
         }
 
-        
         [Fact]
         public void FindUsersByEmail_Transforms_Results_Into_a_MembershipCollection()
         {
@@ -44,7 +49,7 @@ namespace nHibernate.Membership.Provider.Test
 
             var result = testObject.FindUsersByEmail("asdfasf@b.com", 0, 0, out totalRecords);
 
-            Assert.Equal<int>(0, result.Count);            
+            Assert.Equal<int>(0, result.Count);
         }
 
         [Fact]
