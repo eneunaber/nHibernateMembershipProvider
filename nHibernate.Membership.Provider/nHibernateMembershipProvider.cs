@@ -148,7 +148,11 @@ namespace nHibernate.Membership.Provider
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            throw new NotImplementedException();
+            var user = _repository.GetOne<User>(new FindUsersByNameQuery("", ""));
+            if (user == null) 
+                return false;
+            _repository.Delete<User>(user.Id);
+            return true;
         }
 
         public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
@@ -183,7 +187,9 @@ namespace nHibernate.Membership.Provider
             totalRecords = userCollection.Count;
             return userCollection;
         }
+        #endregion
 
+        #region "Private Methods"
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
         {
             var users = _repository.GetQueryableList<User>(query);
@@ -214,6 +220,7 @@ namespace nHibernate.Membership.Provider
                 );
             return userCollection;
         }
+
         #endregion
 
     }

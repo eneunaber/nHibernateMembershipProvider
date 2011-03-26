@@ -2,6 +2,7 @@
 using System.Linq;
 using NHibernate;
 using NHibernate.Linq;
+using System;
 
 namespace nHibernate.Membership.Provider
 {
@@ -29,6 +30,11 @@ namespace nHibernate.Membership.Provider
             return Session.Get<T>(id);
         }
 
+        public T GetById<T>(Guid id)
+        {
+            return Session.Get<T>(id);
+        }
+
         public void Save<T>(T entity)
         {
             using (ITransaction transaction = Session.BeginTransaction())
@@ -47,6 +53,15 @@ namespace nHibernate.Membership.Provider
             }
         }
 
+        public void Delete<T>(Guid id)
+        {
+            using (ITransaction transaction = Session.BeginTransaction())
+            {
+                Session.Delete(GetById<T>(id));
+                transaction.Commit();
+            }
+        }
+
         public T GetOne<T>(QueryBase<T> query)
         {
             return query.SatisfyingElementFrom(Session.Query<T>());
@@ -56,6 +71,5 @@ namespace nHibernate.Membership.Provider
         {
             return query.SatisfyingElementsFrom(Session.Query<T>());
         }
-
     }
 }
