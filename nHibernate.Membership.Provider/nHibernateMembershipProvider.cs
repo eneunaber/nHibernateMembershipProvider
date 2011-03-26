@@ -10,14 +10,16 @@ namespace nHibernate.Membership.Provider
     public class nHibernateMembershipProvider : MembershipProvider
     {
         private IRepository _repository;
+        private IQueryFactory _queryFactory;
 
         public nHibernateMembershipProvider()
         {
         }
 
-        public nHibernateMembershipProvider(IRepository repository)
+        public nHibernateMembershipProvider(IRepository repository, IQueryFactory queryFactory)
         {
             this._repository = repository;
+            this._queryFactory = queryFactory;
         }
 
         #region "Fields"
@@ -146,6 +148,7 @@ namespace nHibernate.Membership.Provider
             throw new NotImplementedException();
         }
 
+        //TODO: Do we want to change the way Delete works? Maybe pass in the User object vs doing 3 queries
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
             var user = _repository.GetOne<User>(new FindUsersByNameQuery("", ""));

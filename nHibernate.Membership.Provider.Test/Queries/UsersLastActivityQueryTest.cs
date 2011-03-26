@@ -19,5 +19,17 @@ namespace nHibernate.Membership.Provider.Test.Queries
             Assert.Contains("(user.LastActivityDate > value(nHibernate.Membership.Provider.Queries.UsersLastActivityQuery)._lastActivityDate)", body.ToString());
             Assert.Contains("(user.ApplicationName == value(nHibernate.Membership.Provider.Queries.UsersLastActivityQuery)._applicationName)", body.ToString());
         }
+
+        [Fact]
+        public void QueryFactory_Builds_UsersLastActivityQuery()
+        {
+            var testObject = new QueryFactory();
+            var time = DateTime.Now;
+            var appName = "myApp";
+
+            var query = testObject.createUsersLastActivityQuery(time, appName);
+
+            Assert.IsType<UsersLastActivityQuery>(query);
+        }
     }
 }

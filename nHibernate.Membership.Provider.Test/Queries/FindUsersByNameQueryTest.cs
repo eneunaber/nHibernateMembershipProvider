@@ -19,5 +19,17 @@ namespace nHibernate.Membership.Provider.Test.Queries
             Assert.Contains("(user.Username == value(nHibernate.Membership.Provider.Queries.FindUsersByNameQuery)._userName)", body.ToString());
             Assert.Contains("(user.ApplicationName == value(nHibernate.Membership.Provider.Queries.FindUsersByNameQuery)._applicationName)", body.ToString());
         }
+
+        [Fact]
+        public void QueryFactory_Builds_FindUsersByNameQuery()
+        {
+            var testObject = new QueryFactory();
+            var name = "my name";
+            var appName = "myApp";
+
+            var query = testObject.createFindUsersByNameQuery(name, appName);
+
+            Assert.IsType<FindUsersByNameQuery>(query);
+        }
     }
 }

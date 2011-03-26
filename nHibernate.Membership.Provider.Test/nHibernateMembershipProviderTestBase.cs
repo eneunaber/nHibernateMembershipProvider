@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NHibernate;
+using nHibernate.Membership.Provider.Queries;
 
 namespace nHibernate.Membership.Provider.Test
 {
@@ -7,6 +8,7 @@ namespace nHibernate.Membership.Provider.Test
     {
         protected Mock<IRepository> _repository;
         protected Mock<ISession> _session;
+        protected Mock<IQueryFactory> _queryFactory;
         protected nHibernateMembershipProvider testObject;
 
 
@@ -15,7 +17,8 @@ namespace nHibernate.Membership.Provider.Test
         {
             _repository = new Mock<IRepository>();
             _session = new Mock<ISession>();
-            testObject  = new nHibernateMembershipProvider(_repository.Object);
+            _queryFactory = new Mock<IQueryFactory>();
+            testObject = new nHibernateMembershipProvider(_repository.Object, _queryFactory.Object);
 
         }
     }

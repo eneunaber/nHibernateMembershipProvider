@@ -18,5 +18,17 @@ namespace nHibernate.Membership.Provider.Test.Queries
             Assert.Contains("(user.Email == value(nHibernate.Membership.Provider.Queries.FindUsersByEmailQuery)._emailAddress)", body.ToString());
             Assert.Contains("(user.ApplicationName == value(nHibernate.Membership.Provider.Queries.FindUsersByEmailQuery)._applicationName)", body.ToString());
         }
+
+        [Fact]
+        public void QueryFactory_Builds_FindUsersByEmailQuery()
+        {
+            var testObject = new QueryFactory();
+            var email = "myEmail@you.com";
+            var appName = "myApp";
+
+            var query = testObject.createFindUsersByEmailQuery(email, appName);
+
+            Assert.IsType<FindUsersByEmailQuery>(query);
+        }
     }
 }
