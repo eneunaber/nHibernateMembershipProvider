@@ -151,7 +151,7 @@ namespace nHibernate.Membership.Provider
         //TODO: Do we want to change the way Delete works? Maybe pass in the User object vs doing 3 queries
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            var user = _repository.GetOne<User>(new FindUsersByNameQuery("", ""));
+            var user = _repository.GetOne<User>(_queryFactory.createFindUsersByNameQuery(username, "myApp"));
             if (user == null) 
                 return false;
             _repository.Delete<User>(user.Id);

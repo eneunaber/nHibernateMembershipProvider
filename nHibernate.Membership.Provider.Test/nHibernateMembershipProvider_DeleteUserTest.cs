@@ -11,10 +11,14 @@ namespace nHibernate.Membership.Provider.Test
         [Fact]
         public void DeleteUser_Creates_a_FindUsersByName_and_Passes_UserId_to_Delete_in_Repository()
         {
+            var name = "foo";
+            var appName = "myApp";
+            var findUsersByNameQuery = new FindUsersByNameQuery(name, appName);
+            _queryFactory.Setup(qf => qf.createFindUsersByNameQuery(name, appName)).Returns(findUsersByNameQuery);
             User user = new User { Id =  Guid.NewGuid() };
-            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersByNameQuery>())).Returns(user);
+            _repository.Setup(r => r.GetOne(findUsersByNameQuery)).Returns(user);
 
-            testObject.DeleteUser("foo", false);
+            testObject.DeleteUser(name, false);
 
             _repository.Verify(r => r.Delete<User>(user.Id));
         }
