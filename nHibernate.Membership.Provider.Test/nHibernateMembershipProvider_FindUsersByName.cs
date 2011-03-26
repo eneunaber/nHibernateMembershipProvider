@@ -13,10 +13,16 @@ namespace nHibernate.Membership.Provider.Test
         public void FindUsersByName_Creates_a_FindUsersByNameQuery_and_Passes_it_to_Repository()
         {
             var totalRecords = 0;
+            var name = "foo";
+            var appName = "myApp";
+            var findUsersByNameQuery = new FindUsersByNameQuery(name, appName);
 
-            testObject.FindUsersByName("foo", 0, 0, out totalRecords);
+            _queryFactory.Setup(qf => qf.createFindUsersByNameQuery(name, appName)).Returns(findUsersByNameQuery);
 
-            _repository.Verify(r => r.GetQueryableList(It.IsAny<FindUsersByNameQuery>()));
+
+            testObject.FindUsersByName(name, 0, 0, out totalRecords);
+
+            _repository.Verify(r => r.GetQueryableList(findUsersByNameQuery));
         }
 
         [Fact]

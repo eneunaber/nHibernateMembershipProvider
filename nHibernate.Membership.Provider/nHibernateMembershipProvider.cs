@@ -178,7 +178,7 @@ namespace nHibernate.Membership.Provider
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(new FindUsersByNameQuery("", "")); //need a test to make me implement correctly
+            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersByNameQuery(usernameToMatch, "myApp"));
             totalRecords = userCollection.Count;
             return userCollection;
         }
