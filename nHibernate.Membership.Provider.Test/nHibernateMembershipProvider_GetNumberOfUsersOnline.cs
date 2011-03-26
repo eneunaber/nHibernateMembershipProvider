@@ -4,6 +4,7 @@ using Moq;
 using nHibernate.Membership.Provider.Entities;
 using nHibernate.Membership.Provider.Queries;
 using Xunit;
+using System;
 
 namespace nHibernate.Membership.Provider.Test
 {
@@ -12,6 +13,12 @@ namespace nHibernate.Membership.Provider.Test
         [Fact]
         public void GetNumberOfUsersOnline_Creates_a_UsersLastActivityQuery_and_Passes_it_to_Repository()
         {
+            var appName = "myApp";
+            var usersLastActivityQuery = new UsersLastActivityQuery(DateTime.Now, appName);
+
+            _queryFactory.Setup(qf => qf.createUsersLastActivityQuery(It.IsAny<DateTime>(), appName)).Returns(usersLastActivityQuery);
+
+
             var result = testObject.GetNumberOfUsersOnline();
 
             _repository.Verify(r => r.GetQueryableList(It.IsAny<UsersLastActivityQuery>()));

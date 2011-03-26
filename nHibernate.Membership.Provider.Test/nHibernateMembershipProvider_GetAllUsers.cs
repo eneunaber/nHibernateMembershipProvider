@@ -13,9 +13,14 @@ namespace nHibernate.Membership.Provider.Test
         public void GetAllUsers_Creates_a_FindAllUsersQuery_and_Passes_it_to_Repository()
         {
             var totalRecords = 0;
+            var appName = "myApp";
+            var findAllUsersQuery = new FindAllUsersQuery(appName);
+
+            _queryFactory.Setup(qf => qf.createFindAllUsersQuery(appName)).Returns(findAllUsersQuery);
+
             var result = testObject.GetAllUsers(0, 0, out totalRecords);
 
-            _repository.Verify(r => r.GetQueryableList(It.IsAny<FindAllUsersQuery>()));
+            _repository.Verify(r => r.GetQueryableList(findAllUsersQuery));
         }
 
         [Fact]
