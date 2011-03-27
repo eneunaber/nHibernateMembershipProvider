@@ -4,7 +4,7 @@ using Xunit;
 
 namespace nHibernate.Membership.Provider.Test.Queries
 {
-    public class FindUsersByNameQueryTest
+    public class FindUsersWithNameLikeQueryTest
     {
 
         [Fact]

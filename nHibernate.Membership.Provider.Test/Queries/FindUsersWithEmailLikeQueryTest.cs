@@ -4,7 +4,7 @@ using Xunit;
 
 namespace nHibernate.Membership.Provider.Test.Queries
 {
-    public class FindUsersByEmailQueryTest
+    public class FindUsersWithEmailLikeQueryTest
     {
         [Fact]
         public void FindUsersByEmailQuery_Correctly_Builds_Expression()
