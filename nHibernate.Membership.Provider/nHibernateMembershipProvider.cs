@@ -151,7 +151,7 @@ namespace nHibernate.Membership.Provider
         //TODO: Do we want to change the way Delete works? Maybe pass in the User object vs doing 3 queries
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            var user = _repository.GetOne<User>(_queryFactory.createFindUsersByNameQuery(username, "myApp"));
+            var user = _repository.GetOne<User>(_queryFactory.createFindUsersWithNameLikeQuery(username, "myApp"));
             if (user == null) 
                 return false;
             _repository.Delete<User>(user.Id);
@@ -165,34 +165,36 @@ namespace nHibernate.Membership.Provider
             return userCollection;
         }
 
+        //TODO: Can I test the first two lines
         public override int GetNumberOfUsersOnline()
         {
-            //Can I test these two lines
             var onlineSpan = new TimeSpan(0, System.Web.Security.Membership.UserIsOnlineTimeWindow, 0);
             DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
-            //
             var usersCurrentlyOnline = _repository.GetQueryableList<User>(_queryFactory.createUsersLastActivityQuery(compareTime, "myApp"));
             return usersCurrentlyOnline.Distinct().Count();
         }
 
+        //TODO: Implement Paging
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersByNameQuery(usernameToMatch, "myApp"));
+            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithNameLikeQuery(usernameToMatch, "myApp"));
             totalRecords = userCollection.Count;
             return userCollection;
         }
 
+        //TODO: Implement Paging
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
                                                                   out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersByEmailQuery(emailToMatch, "myApp"));
+            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithEmailLikeQuery(emailToMatch, "myApp"));
             totalRecords = userCollection.Count;
             return userCollection;
         }
         #endregion
 
         #region "Private Methods"
+        
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
         {
             var users = _repository.GetQueryableList<User>(query);
@@ -206,7 +208,6 @@ namespace nHibernate.Membership.Provider
                                     .Take(pageSize);
             return BuildUserCollectionFromQueryResults(users);
         }
-
 
         private static MembershipUserCollection BuildUserCollectionFromQueryResults(IQueryable<User> users)
         {

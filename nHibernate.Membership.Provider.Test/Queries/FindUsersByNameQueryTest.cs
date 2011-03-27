@@ -10,14 +10,14 @@ namespace nHibernate.Membership.Provider.Test.Queries
         [Fact]
         public void FindUsersByEmailQuery_Correctly_Builds_Expression()
         {
-            var testObject = new FindUsersByNameQuery("Fred", "myApp");
+            var testObject = new FindUsersWithNameLikeQuery("Fred", "myApp");
 
             var exp = testObject.MatchingCriteria;
             Expression body = exp.Body;
 
             Assert.Equal(ExpressionType.AndAlso, body.NodeType);
-            Assert.Contains("(user.Username == value(nHibernate.Membership.Provider.Queries.FindUsersByNameQuery)._userName)", body.ToString());
-            Assert.Contains("(user.ApplicationName == value(nHibernate.Membership.Provider.Queries.FindUsersByNameQuery)._applicationName)", body.ToString());
+            Assert.Contains("(user.Username.StartsWith(value(nHibernate.Membership.Provider.Queries.FindUsersWithNameLikeQuery)._userName) ", body.ToString());
+            Assert.Contains("(user.ApplicationName == value(nHibernate.Membership.Provider.Queries.FindUsersWithNameLikeQuery)._applicationName)", body.ToString());
         }
 
         [Fact]
@@ -27,9 +27,9 @@ namespace nHibernate.Membership.Provider.Test.Queries
             var name = "my name";
             var appName = "myApp";
 
-            var query = testObject.createFindUsersByNameQuery(name, appName);
+            var query = testObject.createFindUsersWithNameLikeQuery(name, appName);
 
-            Assert.IsType<FindUsersByNameQuery>(query);
+            Assert.IsType<FindUsersWithNameLikeQuery>(query);
         }
     }
 }

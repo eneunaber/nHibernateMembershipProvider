@@ -8,7 +8,7 @@ using System;
 
 namespace nHibernate.Membership.Provider.Test
 {
-    public class nHibernateMembershipProvider_GetNumberOfUsersOnline : nHibernateMembershipProviderTestBase
+    public class nHibernateMembershipProvider_GetNumberOfUsersOnlineTest : nHibernateMembershipProviderTestBase
     {
         [Fact]
         public void GetNumberOfUsersOnline_Creates_a_UsersLastActivityQuery_and_Passes_it_to_Repository()

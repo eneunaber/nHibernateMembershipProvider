@@ -4,12 +4,12 @@ using nHibernate.Membership.Provider.Entities;
 
 namespace nHibernate.Membership.Provider.Queries
 {
-    public class FindUsersByEmailQuery : QueryBase<User>
+    public class FindUsersWithEmailLikeQuery : QueryBase<User>
     {
         private readonly string _emailAddress;
         private readonly string _applicationName;
 
-        public FindUsersByEmailQuery(string emailAddress, string applicationName)
+        public FindUsersWithEmailLikeQuery(string emailAddress, string applicationName)
         {
             _emailAddress = emailAddress;
             _applicationName = applicationName;
@@ -17,7 +17,7 @@ namespace nHibernate.Membership.Provider.Queries
 
         public override Expression<Func<User, bool>> MatchingCriteria
         {
-            get { return user => user.Email == _emailAddress && user.ApplicationName == _applicationName; }
+            get { return user => user.Email.StartsWith(_emailAddress) && user.ApplicationName == _applicationName; }
         }
     }
 }                                                                                           

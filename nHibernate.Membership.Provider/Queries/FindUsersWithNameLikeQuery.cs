@@ -4,12 +4,12 @@ using System.Linq.Expressions;
 
 namespace nHibernate.Membership.Provider.Queries
 {
-    public class FindUsersByNameQuery : QueryBase<User>
+    public class FindUsersWithNameLikeQuery : QueryBase<User>
     {
         private string _userName;
         private string _applicationName;
 
-        public FindUsersByNameQuery(string userName, string applicationName)
+        public FindUsersWithNameLikeQuery(string userName, string applicationName)
         {
             _userName = userName;
             _applicationName = applicationName;
@@ -17,7 +17,7 @@ namespace nHibernate.Membership.Provider.Queries
 
         public override Expression<Func<User, bool>> MatchingCriteria
         {
-            get { return user => user.Username == _userName && user.ApplicationName == _applicationName;  }
+            get { return user => user.Username.StartsWith(_userName) && user.ApplicationName == _applicationName;  }
         }
     }
 }

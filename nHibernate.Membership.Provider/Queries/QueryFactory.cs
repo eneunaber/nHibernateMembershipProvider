@@ -10,14 +10,14 @@ namespace nHibernate.Membership.Provider.Queries
             return new FindAllUsersQuery(appName);
         }
 
-        public QueryBase<User> createFindUsersByEmailQuery(string email, string appName)
+        public QueryBase<User> createFindUsersWithEmailLikeQuery(string email, string appName)
         {
-            return new FindUsersByEmailQuery(email, appName);
+            return new FindUsersWithEmailLikeQuery(email, appName);
         }
 
-        public QueryBase<User> createFindUsersByNameQuery(string name, string appName)
+        public QueryBase<User> createFindUsersWithNameLikeQuery(string name, string appName)
         {
-            return new FindUsersByNameQuery(name, appName);
+            return new FindUsersWithNameLikeQuery(name, appName);
         }
 
         public QueryBase<User> createUsersLastActivityQuery(DateTime time, string appName)

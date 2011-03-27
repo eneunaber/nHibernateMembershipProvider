@@ -7,7 +7,7 @@ using Xunit;
 
 namespace nHibernate.Membership.Provider.Test
 {
-    public class nHibernateMembershipProvider_GetAllUsers : nHibernateMembershipProviderTestBase
+    public class nHibernateMembershipProvider_GetAllUsersTest : nHibernateMembershipProviderTestBase
     {
         [Fact]
         public void GetAllUsers_Creates_a_FindAllUsersQuery_and_Passes_it_to_Repository()

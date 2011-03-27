@@ -13,8 +13,8 @@ namespace nHibernate.Membership.Provider.Test
         {
             var name = "foo";
             var appName = "myApp";
-            var findUsersByNameQuery = new FindUsersByNameQuery(name, appName);
-            _queryFactory.Setup(qf => qf.createFindUsersByNameQuery(name, appName)).Returns(findUsersByNameQuery);
+            var findUsersByNameQuery = new FindUsersWithNameLikeQuery(name, appName);
+            _queryFactory.Setup(qf => qf.createFindUsersWithNameLikeQuery(name, appName)).Returns(findUsersByNameQuery);
             User user = new User { Id =  Guid.NewGuid() };
             _repository.Setup(r => r.GetOne(findUsersByNameQuery)).Returns(user);
 
@@ -27,7 +27,7 @@ namespace nHibernate.Membership.Provider.Test
         public void DeleteUser_Does_Not_Call_Delete_in_Repository_if_No_User_is_Found()
         {
             User user = null;
-            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersByNameQuery>())).Returns(user);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(user);
 
             testObject.DeleteUser("foo", false);
 
@@ -38,7 +38,7 @@ namespace nHibernate.Membership.Provider.Test
         public void DeleteUser_Returns_False_if_No_User_is_Found()
         {
             User user = null;
-            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersByNameQuery>())).Returns(user);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(user);
 
             var returnValue = testObject.DeleteUser("foo", false);
 
@@ -49,7 +49,7 @@ namespace nHibernate.Membership.Provider.Test
         public void DeleteUser_Returns_True_if_User_is_Deleted()
         {
             User user = new User { Id = Guid.NewGuid() };
-            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersByNameQuery>())).Returns(user);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(user);
 
             var returnValue = testObject.DeleteUser("foo", false);
 

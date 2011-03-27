@@ -10,14 +10,14 @@ namespace nHibernate.Membership.Provider.Test
     public class nHibernateMembershipProvider_FindUsersByNameTest : nHibernateMembershipProviderTestBase
     {
         [Fact] //Would like test to prove exact object
-        public void FindUsersByName_Creates_a_FindUsersByNameQuery_and_Passes_it_to_Repository()
+        public void FindUsersWithNameLike_Creates_a_FindUsersByNameQuery_and_Passes_it_to_Repository()
         {
             var totalRecords = 0;
             var name = "foo";
             var appName = "myApp";
-            var findUsersByNameQuery = new FindUsersByNameQuery(name, appName);
+            var findUsersByNameQuery = new FindUsersWithNameLikeQuery(name, appName);
 
-            _queryFactory.Setup(qf => qf.createFindUsersByNameQuery(name, appName)).Returns(findUsersByNameQuery);
+            _queryFactory.Setup(qf => qf.createFindUsersWithNameLikeQuery(name, appName)).Returns(findUsersByNameQuery);
 
 
             testObject.FindUsersByName(name, 0, 0, out totalRecords);
@@ -26,11 +26,11 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void FindUsersByName_Transforms_Results_Into_a_MembershipCollection()
+        public void FindUsersWithNameLike_Transforms_Results_Into_a_MembershipCollection()
         {
             var totalRecords = 0;
             IQueryable<User> userList = TestDataHelper.CreateUserListForNameSearch();
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByNameQuery>())).Returns(userList);
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
 
             var result = testObject.FindUsersByName("a", 0, 0, out totalRecords);
 
@@ -41,10 +41,10 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void FindUsersByName_Returns_an_Empty_Collection_if_No_Matches_are_Found() {
+        public void FindUsersWithNameLike_Returns_an_Empty_Collection_if_No_Matches_are_Found() {
             var totalRecords = 0;
             IQueryable<User> userList = (new List<User>()).AsQueryable();
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByNameQuery>())).Returns(userList);
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
 
             var result = testObject.FindUsersByName("bar", 0, 0, out totalRecords);
 
@@ -52,11 +52,11 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void FindUsersByName_Sets_TotalRecords_Equal_to_Number_of_Records_Returned()
+        public void FindUsersWithNameLike_Sets_TotalRecords_Equal_to_Number_of_Records_Returned()
         {
             var totalRecords = 0;
             IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersByNameQuery>())).Returns(userList);
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
 
             var result = testObject.FindUsersByName("a", 0, 0, out totalRecords);
 
