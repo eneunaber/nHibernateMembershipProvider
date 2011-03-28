@@ -32,7 +32,7 @@ namespace nHibernate.Membership.Provider.Test
             IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithEmailLikeQuery>())).Returns(userList);
 
-            var result = testObject.FindUsersByEmail("a@b.com", 0, 0, out totalRecords);
+            var result = testObject.FindUsersByEmail("a@b.com", 1, 100, out totalRecords);
 
             Assert.Equal<int>(3, result.Count);
             Assert.Equal<string>("a@b.com", result["a"].Email);
@@ -47,7 +47,7 @@ namespace nHibernate.Membership.Provider.Test
             IQueryable<User> userList = (new List<User>()).AsQueryable();
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithEmailLikeQuery>())).Returns(userList);
 
-            var result = testObject.FindUsersByEmail("asdfasf@b.com", 0, 0, out totalRecords);
+            var result = testObject.FindUsersByEmail("asdfasf@b.com", 1, 100, out totalRecords);
 
             Assert.Equal<int>(0, result.Count);
         }
@@ -59,10 +59,26 @@ namespace nHibernate.Membership.Provider.Test
             IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithEmailLikeQuery>())).Returns(userList);
 
-            var result = testObject.FindUsersByEmail("a@b.com", 0, 0, out totalRecords);
+            var result = testObject.FindUsersByEmail("a@b.com", 1, 100, out totalRecords);
 
             Assert.Equal<int>(3, totalRecords);
             Assert.Equal<int>(result.Count, totalRecords);
+        }
+
+        [Fact]
+        public void FindUsersWithEmailLike_Returns_Only_Users_From_the_Page_Requested()
+        {
+            var totalRecords = 0;
+            IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithEmailLikeQuery>())).Returns(userList);
+            var pageIndex = 3;
+            var pageSize = 1;
+
+
+            var result = testObject.FindUsersByEmail("a@b.com", pageIndex, pageSize, out totalRecords);
+
+            Assert.Equal<int>(1, totalRecords);
+            Assert.Equal<string>("a@b.com", result["c"].Email);
         }
     }
 }

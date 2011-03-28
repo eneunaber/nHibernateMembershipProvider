@@ -9,7 +9,7 @@ namespace nHibernate.Membership.Provider.Test
 {
     public class nHibernateMembershipProvider_FindUsersByNameTest : nHibernateMembershipProviderTestBase
     {
-        [Fact] //Would like test to prove exact object
+        [Fact]
         public void FindUsersWithNameLike_Creates_a_FindUsersByNameQuery_and_Passes_it_to_Repository()
         {
             var totalRecords = 0;
@@ -32,7 +32,7 @@ namespace nHibernate.Membership.Provider.Test
             IQueryable<User> userList = TestDataHelper.CreateUserListForNameSearch();
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
 
-            var result = testObject.FindUsersByName("a", 0, 0, out totalRecords);
+            var result = testObject.FindUsersByName("a", 1, 100, out totalRecords);
 
             Assert.Equal<int>(3, result.Count);
             Assert.Equal<string>("a", result["a"].UserName);
@@ -46,7 +46,7 @@ namespace nHibernate.Membership.Provider.Test
             IQueryable<User> userList = (new List<User>()).AsQueryable();
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
 
-            var result = testObject.FindUsersByName("bar", 0, 0, out totalRecords);
+            var result = testObject.FindUsersByName("bar", 1, 100, out totalRecords);
 
             Assert.Equal<int>(0, result.Count);            
         }
@@ -55,13 +55,29 @@ namespace nHibernate.Membership.Provider.Test
         public void FindUsersWithNameLike_Sets_TotalRecords_Equal_to_Number_of_Records_Returned()
         {
             var totalRecords = 0;
-            IQueryable<User> userList = TestDataHelper.CreateUserListForEmailSearch();
+            IQueryable<User> userList = TestDataHelper.CreateUserListForNameSearch();
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
 
-            var result = testObject.FindUsersByName("a", 0, 0, out totalRecords);
+            var result = testObject.FindUsersByName("a", 1, 100, out totalRecords);
 
             Assert.Equal<int>(3, totalRecords);
             Assert.Equal<int>(result.Count, totalRecords);
+        }
+
+        [Fact]
+        public void FindUsersWithNameLike_Returns_Only_Users_From_the_Page_Requested()
+        {
+            var totalRecords = 0;
+            IQueryable<User> userList = TestDataHelper.CreateUserListForNameSearch();
+            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUsersWithNameLikeQuery>())).Returns(userList);
+            var pageIndex = 3;
+            var pageSize = 1;
+
+
+            var result = testObject.FindUsersByName("a", pageIndex, pageSize, out totalRecords);
+
+            Assert.Equal<int>(1, totalRecords);
+            Assert.Equal<string>("aaa", result["aaa"].UserName);
         }
     }
 }

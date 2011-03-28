@@ -174,20 +174,18 @@ namespace nHibernate.Membership.Provider
             return usersCurrentlyOnline.Distinct().Count();
         }
 
-        //TODO: Implement Paging
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithNameLikeQuery(usernameToMatch, "myApp"));
+            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithNameLikeQuery(usernameToMatch, "myApp"), pageIndex, pageSize);
             totalRecords = userCollection.Count;
             return userCollection;
         }
 
-        //TODO: Implement Paging
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
                                                                   out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithEmailLikeQuery(emailToMatch, "myApp"));
+            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithEmailLikeQuery(emailToMatch, "myApp"), pageIndex, pageSize);
             totalRecords = userCollection.Count;
             return userCollection;
         }
