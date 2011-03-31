@@ -140,12 +140,13 @@ namespace nHibernate.Membership.Provider
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
-            throw new NotImplementedException();
+            return FindSingleUserByQuery(_queryFactory.createFindUserByUsernameQuery(username, "myApp"));
         }
 
         public override string GetUserNameByEmail(string email)
         {
-            throw new NotImplementedException();
+            var user = FindSingleUserByQuery(_queryFactory.createFindUserByEmailQuery(email, "myApp"));
+            return user != null? user.UserName : string.Empty;
         }
 
         //TODO: Do we want to change the way Delete works? Maybe pass in the User object vs doing 3 queries
@@ -192,7 +193,15 @@ namespace nHibernate.Membership.Provider
         #endregion
 
         #region "Private Methods"
-        
+
+        private MembershipUser FindSingleUserByQuery(QueryBase<User> query)
+        {
+            var users = _repository.GetQueryableList<User>(query);
+            if (users.Count() == 0) return null;
+            return createMembershipUser((from user in users
+                                         select user).First());
+        }
+
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
         {
             var users = _repository.GetQueryableList<User>(query);
@@ -211,16 +220,21 @@ namespace nHibernate.Membership.Provider
         {
             var userCollection = new MembershipUserCollection();
             users.ToList().ForEach(user =>
-                                   userCollection.Add(new MembershipUser("nHibernateMembershipProvider",
-                                                                          user.Username, user.Id, user.Email,
-                                                                          user.PasswordQuestion, user.Comment,
-                                                                          user.IsApproved, user.IsLockedOut,
-                                                                          user.CreationDate, user.LastLoginDate,
-                                                                          user.LastActivityDate,
-                                                                          user.LastPasswordChangedDate,
-                                                                          user.LastLockedOutDate))
+                                   userCollection.Add(createMembershipUser(user))
                 );
             return userCollection;
+        }
+
+        private static MembershipUser createMembershipUser(User user)
+        {
+            return new MembershipUser("nHibernateMembershipProvider",
+                                        user.Username, user.Id, user.Email,
+                                        user.PasswordQuestion, user.Comment,
+                                        user.IsApproved, user.IsLockedOut,
+                                        user.CreationDate, user.LastLoginDate,
+                                        user.LastActivityDate,
+                                        user.LastPasswordChangedDate,
+                                        user.LastLockedOutDate);
         }
 
         #endregion

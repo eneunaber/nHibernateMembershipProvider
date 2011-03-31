@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using nHibernate.Membership.Provider.Entities;
+using System.Web.Security;
 
 namespace nHibernate.Membership.Provider.Test
 {
@@ -51,6 +52,18 @@ namespace nHibernate.Membership.Provider.Test
                                      FailedPasswordAttemptWindowStart = DateTime.Now}
 
                             }).AsQueryable();
+        }
+
+        public static MembershipUser CreateMembershipUser(string userName, int id, string email) {
+            return new MembershipUser("nHibernateMembershipProvider",
+                                        userName, id, email,
+                                        "PasswordQuestion", "Comment",
+                                        true, false,
+                                        DateTime.Now, DateTime.Now,
+                                        DateTime.Now,
+                                        DateTime.Now,
+                                        DateTime.Now);
+        
         }
 
     }

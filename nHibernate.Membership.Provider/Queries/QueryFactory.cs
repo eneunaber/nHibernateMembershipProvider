@@ -29,5 +29,10 @@ namespace nHibernate.Membership.Provider.Queries
         {
             return new FindUserByEmailQuery(email, appName);
         }
+
+        public QueryBase<User> createFindUserByUsernameQuery(string username, string appName)
+        {
+            return new FindUserByUsernameQuery(username, appName);
+        }
     }
 }

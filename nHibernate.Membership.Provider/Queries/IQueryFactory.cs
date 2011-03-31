@@ -10,5 +10,6 @@ namespace nHibernate.Membership.Provider.Queries
         QueryBase<User> createFindUsersWithNameLikeQuery(string name, string appName);
         QueryBase<User> createUsersLastActivityQuery(DateTime time, string appName);
         QueryBase<User> createFindUserByEmailQuery(string email, string appName);
+        QueryBase<User> createFindUserByUsernameQuery(string username, string appName);
     }
 }
