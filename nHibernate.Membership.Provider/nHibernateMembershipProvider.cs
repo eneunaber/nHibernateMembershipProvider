@@ -140,7 +140,19 @@ namespace nHibernate.Membership.Provider
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
-            return FindSingleUserByQuery(_queryFactory.createFindUserByUsernameQuery(username, "myApp"));
+            //return FindSingleUserByQuery(_queryFactory.createFindUserByUsernameQuery(username, "myApp"));
+            var query = _queryFactory.createFindUserByUsernameQuery(username, "myApp");
+            var users = _repository.GetQueryableList<User>(query);
+            if (users.Count() == 0) return null;
+            var selectedUser = (from user in users
+                        select user).First();
+            if (userIsOnline) {
+                selectedUser.LastActivityDate = DateTime.Now;
+                _repository.Save<User>(selectedUser);
+            }
+
+            return createMembershipUser(selectedUser);
+
         }
 
         public override string GetUserNameByEmail(string email)
