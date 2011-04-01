@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Security;
-using NHibernate;
 using nHibernate.Membership.Provider.Entities;
 using nHibernate.Membership.Provider.Queries;
 
@@ -130,7 +129,17 @@ namespace nHibernate.Membership.Provider
 
         public override bool UnlockUser(string userName)
         {
-            throw new NotImplementedException();
+            var query = _queryFactory.createFindUserByUsernameQuery(userName, "myApp");
+            var user = _repository.GetOne<User>(query);
+            user.IsLockedOut = false;
+            user.LastLockedOutDate = DateTime.Now;
+            try {
+                _repository.Save<User>(user);
+            }
+            catch {
+                return false;
+            }
+            return true;
         }
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
