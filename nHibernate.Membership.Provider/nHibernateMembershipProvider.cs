@@ -135,22 +135,20 @@ namespace nHibernate.Membership.Provider
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
-            throw new NotImplementedException();
+            var user = _repository.GetById<User>(providerUserKey);
+            if (user == null) return null;
+            UpdateUserLastActivityDate(userIsOnline, user);
+            return createMembershipUser(user);
         }
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
-            //return FindSingleUserByQuery(_queryFactory.createFindUserByUsernameQuery(username, "myApp"));
             var query = _queryFactory.createFindUserByUsernameQuery(username, "myApp");
             var users = _repository.GetQueryableList<User>(query);
             if (users.Count() == 0) return null;
             var selectedUser = (from user in users
                         select user).First();
-            if (userIsOnline) {
-                selectedUser.LastActivityDate = DateTime.Now;
-                _repository.Save<User>(selectedUser);
-            }
-
+            UpdateUserLastActivityDate(userIsOnline, selectedUser);
             return createMembershipUser(selectedUser);
 
         }
@@ -247,6 +245,15 @@ namespace nHibernate.Membership.Provider
                                         user.LastActivityDate,
                                         user.LastPasswordChangedDate,
                                         user.LastLockedOutDate);
+        }
+
+        private void UpdateUserLastActivityDate(bool userIsOnline, User user)
+        {
+            if (userIsOnline)
+            {
+                user.LastActivityDate = DateTime.Now;
+                _repository.Save<User>(user);
+            }
         }
 
         #endregion

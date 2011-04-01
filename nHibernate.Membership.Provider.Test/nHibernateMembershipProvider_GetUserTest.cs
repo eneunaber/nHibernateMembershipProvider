@@ -12,7 +12,7 @@ namespace nHibernate.Membership.Provider.Test
     public class nHibernateMembershipProvider_GetUserTest : nHibernateMembershipProviderTestBase
     {
         [Fact]
-        public void GetUserNameByEmail_Creates_a_FindUserByUsernameQuery_and_Passes_it_to_Repository()
+        public void GetUser_Creates_a_FindUserByUsernameQuery_and_Passes_it_to_Repository()
         {
             var username = "foo";
             var appName = "myApp";
@@ -25,7 +25,7 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void GetUserNameByEmail_Returns_User_From_Repository()
+        public void GetUser_Returns_User_From_Repository()
         {
             var username = "fred";
             IQueryable<User> userCollection = (new List<User>() { new User { Username = username } }).AsQueryable<User>();
@@ -39,7 +39,7 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void GetUserNameByEmail_Returns_Null_if_No_User_is_Returned_From_Repository()
+        public void GetUser_Returns_Null_if_No_User_is_Returned_From_Repository()
         {
             var username = "fred";
             _queryFactory.Setup(qf => qf.createFindUserByUsernameQuery(It.IsAny<string>(), It.IsAny<string>())).Returns(new FindUserByUsernameQuery("", ""));
@@ -51,7 +51,7 @@ namespace nHibernate.Membership.Provider.Test
         }
 
         [Fact]
-        public void GetUserNameByEmail_Updates_User_LastActivityDate_When_userIsOnline_is_True()
+        public void GetUser_Updates_User_LastActivityDate_When_userIsOnline_is_True()
         {
             var startTime = DateTime.Now;
             var username = "fred";
@@ -63,12 +63,12 @@ namespace nHibernate.Membership.Provider.Test
             var result = testObject.GetUser(username, true);
 
             var stopTime = DateTime.Now;
-            Assert.True(result.LastActivityDate > startTime && result.LastActivityDate < stopTime);
+            Assert.True(result.LastActivityDate >= startTime && result.LastActivityDate <= stopTime);
             _repository.Verify(r => r.Save<User>(user));
         }
 
         [Fact]
-        public void GetUserNameByEmail_Does_NOT_Update_User_LastActivityDate_When_userIsOnline_is_False()
+        public void GetUser_Does_NOT_Update_User_LastActivityDate_When_userIsOnline_is_False()
         {
             var startTime = DateTime.Now;
             var username = "fred";
@@ -78,6 +78,65 @@ namespace nHibernate.Membership.Provider.Test
             _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUserByUsernameQuery>())).Returns(userCollection);
 
             var result = testObject.GetUser(username, false);
+
+            var stopTime = DateTime.Now;
+            Assert.Equal(result.LastActivityDate, startTime);
+            _repository.Verify(r => r.Save<User>(user), Times.Never());
+        }
+
+        //GetUser when provided a User Id
+
+        [Fact]
+        public void GetUser_Passes_UserId_to_Repository_and_Passes_Matching_User_Back()
+        {
+            var id = Guid.NewGuid();
+            var userName = "fred";
+            var user = new User { Username = userName };
+            _repository.Setup(r => r.GetById<User>(id)).Returns(user);
+
+            var result = testObject.GetUser(id, false);
+
+            Assert.IsType<MembershipUser>(result);
+            Assert.Equal(userName, result.UserName);
+        }
+
+        [Fact]
+        public void GetUser_Returns_Null_When_No_Match_is_Found_Back()
+        {
+            var id = Guid.NewGuid();
+            var userName = "fred";
+            _repository.Setup(r => r.GetById<User>(id)).Returns<User>(null);
+
+            var result = testObject.GetUser(id, false);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetUser_With_UserId_Updates_User_LastActivityDate_When_userIsOnline_is_True()
+        {
+            var startTime = DateTime.Now;
+            var id = Guid.NewGuid();
+            var userName = "fred";
+            var user = new User { Username = userName };
+            _repository.Setup(r => r.GetById<User>(id)).Returns(user);
+
+            var result = testObject.GetUser(id, true);
+
+            var stopTime = DateTime.Now;
+            Assert.True(result.LastActivityDate >= startTime && result.LastActivityDate <= stopTime);
+            _repository.Verify(r => r.Save<User>(user));
+        }
+
+        [Fact]
+        public void GetUser_With_UserId_Does_NOT_Update_User_LastActivityDate_When_userIsOnline_is_False()
+        {
+            var startTime = DateTime.Now;
+            var id = Guid.NewGuid();
+            var user = new User { LastActivityDate = startTime };
+            _repository.Setup(r => r.GetById<User>(id)).Returns(user);
+
+            var result = testObject.GetUser(id, false);
 
             var stopTime = DateTime.Now;
             Assert.Equal(result.LastActivityDate, startTime);

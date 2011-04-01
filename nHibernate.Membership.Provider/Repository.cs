@@ -30,7 +30,7 @@ namespace nHibernate.Membership.Provider
             return Session.Get<T>(id);
         }
 
-        public T GetById<T>(Guid id)
+        public T GetById<T>(Object id)
         {
             return Session.Get<T>(id);
         }
