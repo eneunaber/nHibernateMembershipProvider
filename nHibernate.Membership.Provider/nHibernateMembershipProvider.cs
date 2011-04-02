@@ -208,10 +208,9 @@ namespace nHibernate.Membership.Provider
 
         private MembershipUser FindSingleUserByQuery(QueryBase<User> query)
         {
-            var users = _repository.GetQueryableList<User>(query);
-            if (users.Count() == 0) return null;
-            return createMembershipUser((from user in users
-                                         select user).First());
+            var user = _repository.GetOne<User>(query);
+            if (user == null) return null;
+            return createMembershipUser(user);
         }
 
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)

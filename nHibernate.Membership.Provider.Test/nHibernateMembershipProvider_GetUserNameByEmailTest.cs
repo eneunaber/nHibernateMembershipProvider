@@ -20,7 +20,7 @@ namespace nHibernate.Membership.Provider.Test
 
             testObject.GetUserNameByEmail(email);
 
-            _repository.Verify(r => r.GetQueryableList(findUsersByEmailQuery));
+            _repository.Verify(r => r.GetOne(findUsersByEmailQuery));
         }
 
         [Fact]
@@ -28,9 +28,9 @@ namespace nHibernate.Membership.Provider.Test
         {
             var email = "a@b.com";
             var username = "fred";
-            IQueryable<User> userCollection =  (new List<User>() { new User { Username = username} }).AsQueryable<User>();
+            var user = new User { Username = username };
             _queryFactory.Setup(qf => qf.createFindUserByEmailQuery(It.IsAny<string>(), It.IsAny<string>())).Returns(new FindUserByEmailQuery("",""));
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUserByEmailQuery>())).Returns(userCollection);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUserByEmailQuery>())).Returns(user);
 
             var result = testObject.GetUserNameByEmail(email);
 
