@@ -21,16 +21,16 @@ namespace nHibernate.Membership.Provider.Test
 
             testObject.GetUser(username, false);
 
-            _repository.Verify(r => r.GetQueryableList(findUserByUsernameQuery));
+            _repository.Verify(r => r.GetOne(findUserByUsernameQuery));
         }
 
         [Fact]
         public void GetUser_Returns_User_From_Repository()
         {
             var username = "fred";
-            IQueryable<User> userCollection = (new List<User>() { new User { Username = username } }).AsQueryable<User>();
+            var user = new User { Username = username };
             _queryFactory.Setup(qf => qf.createFindUserByUsernameQuery(It.IsAny<string>(), It.IsAny<string>())).Returns(new FindUserByUsernameQuery("", ""));
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUserByUsernameQuery>())).Returns(userCollection);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUserByUsernameQuery>())).Returns(user);
 
             var result = testObject.GetUser(username, false);
 
@@ -43,7 +43,7 @@ namespace nHibernate.Membership.Provider.Test
         {
             var username = "fred";
             _queryFactory.Setup(qf => qf.createFindUserByUsernameQuery(It.IsAny<string>(), It.IsAny<string>())).Returns(new FindUserByUsernameQuery("", ""));
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUserByUsernameQuery>())).Returns((new List<User>()).AsQueryable<User>());
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUserByUsernameQuery>())).Returns<User>(null);
 
             var result = testObject.GetUser(username, false);
 
@@ -56,9 +56,8 @@ namespace nHibernate.Membership.Provider.Test
             var startTime = DateTime.Now;
             var username = "fred";
             var user = new User { Username = username };
-            IQueryable<User> userCollection = (new List<User>() { user }).AsQueryable<User>();
             _queryFactory.Setup(qf => qf.createFindUserByUsernameQuery(It.IsAny<string>(), It.IsAny<string>())).Returns(new FindUserByUsernameQuery("", ""));
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUserByUsernameQuery>())).Returns(userCollection);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUserByUsernameQuery>())).Returns(user);
 
             var result = testObject.GetUser(username, true);
 
@@ -73,9 +72,8 @@ namespace nHibernate.Membership.Provider.Test
             var startTime = DateTime.Now;
             var username = "fred";
             var user = new User { Username = username, LastActivityDate = startTime };
-            IQueryable<User> userCollection = (new List<User>() { user }).AsQueryable<User>();
             _queryFactory.Setup(qf => qf.createFindUserByUsernameQuery(It.IsAny<string>(), It.IsAny<string>())).Returns(new FindUserByUsernameQuery("", ""));
-            _repository.Setup(r => r.GetQueryableList(It.IsAny<FindUserByUsernameQuery>())).Returns(userCollection);
+            _repository.Setup(r => r.GetOne(It.IsAny<FindUserByUsernameQuery>())).Returns(user);
 
             var result = testObject.GetUser(username, false);
 

@@ -145,21 +145,14 @@ namespace nHibernate.Membership.Provider
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
             var user = _repository.GetById<User>(providerUserKey);
-            if (user == null) return null;
-            UpdateUserLastActivityDate(userIsOnline, user);
-            return createMembershipUser(user);
+            return CheckUserForActivityUpdate(user, userIsOnline);
         }
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
             var query = _queryFactory.createFindUserByUsernameQuery(username, "myApp");
-            var users = _repository.GetQueryableList<User>(query);
-            if (users.Count() == 0) return null;
-            var selectedUser = (from user in users
-                        select user).First();
-            UpdateUserLastActivityDate(userIsOnline, selectedUser);
-            return createMembershipUser(selectedUser);
-
+            var user = _repository.GetOne<User>(query);
+            return CheckUserForActivityUpdate(user, userIsOnline);
         }
 
         public override string GetUserNameByEmail(string email)
@@ -254,6 +247,13 @@ namespace nHibernate.Membership.Provider
                                         user.LastActivityDate,
                                         user.LastPasswordChangedDate,
                                         user.LastLockedOutDate);
+        }
+
+        private MembershipUser CheckUserForActivityUpdate(User user, bool userIsOnline)
+        {
+            if (user == null) return null;
+            UpdateUserLastActivityDate(userIsOnline, user);
+            return createMembershipUser(user);        
         }
 
         private void UpdateUserLastActivityDate(bool userIsOnline, User user)
