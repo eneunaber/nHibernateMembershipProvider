@@ -178,13 +178,7 @@ namespace nHibernate.Membership.Provider
             return true;
         }
 
-        public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
-        {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindAllUsersQuery("myApp"), pageIndex, pageSize);
-            totalRecords = userCollection.Count;
-            return userCollection;
-        }
-
+        
         //TODO: Can I test the first two lines
         public override int GetNumberOfUsersOnline()
         {
@@ -194,20 +188,21 @@ namespace nHibernate.Membership.Provider
             return usersCurrentlyOnline.Distinct().Count();
         }
 
+        public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords)
+        {
+            return FindUsersByQueryPaged(_queryFactory.createFindAllUsersQuery("myApp"), pageIndex, pageSize, out totalRecords);
+        }
+
         public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize,
                                                                  out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithNameLikeQuery(usernameToMatch, "myApp"), pageIndex, pageSize);
-            totalRecords = userCollection.Count;
-            return userCollection;
+            return FindUsersByQueryPaged(_queryFactory.createFindUsersWithNameLikeQuery(usernameToMatch, "myApp"), pageIndex, pageSize, out totalRecords);
         }
 
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize,
                                                                   out int totalRecords)
         {
-            var userCollection = FindUsersByQuery(_queryFactory.createFindUsersWithEmailLikeQuery(emailToMatch, "myApp"), pageIndex, pageSize);
-            totalRecords = userCollection.Count;
-            return userCollection;
+            return FindUsersByQueryPaged(_queryFactory.createFindUsersWithEmailLikeQuery(emailToMatch, "myApp"), pageIndex, pageSize, out totalRecords);
         }
         #endregion
 
@@ -226,12 +221,14 @@ namespace nHibernate.Membership.Provider
             return BuildUserCollectionFromQueryResults(users);
         }
 
-        private MembershipUserCollection FindUsersByQuery(QueryBase<User> query, int pageIndex, int pageSize)
+        private MembershipUserCollection FindUsersByQueryPaged(QueryBase<User> query, int pageIndex, int pageSize, out int totalRecords)
         {
             var users = _repository.GetQueryableList<User>(query)
-                                    .Skip((pageIndex - 1) * pageSize)
-                                    .Take(pageSize);
-            return BuildUserCollectionFromQueryResults(users);
+                        .Skip((pageIndex - 1) * pageSize)
+                        .Take(pageSize);
+            var userCollection = BuildUserCollectionFromQueryResults(users);
+            totalRecords = userCollection.Count;
+            return userCollection;        
         }
 
         private MembershipUserCollection BuildUserCollectionFromQueryResults(IQueryable<User> users)
