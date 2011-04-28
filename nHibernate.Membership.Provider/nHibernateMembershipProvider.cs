@@ -10,15 +10,17 @@ namespace nHibernate.Membership.Provider
     {
         private IRepository _repository;
         private IQueryFactory _queryFactory;
+        private IUserTranslator _userTranslator;
 
         public nHibernateMembershipProvider()
         {
         }
 
-        public nHibernateMembershipProvider(IRepository repository, IQueryFactory queryFactory)
+        public nHibernateMembershipProvider(IRepository repository, IQueryFactory queryFactory, IUserTranslator userTranslator)
         {
             this._repository = repository;
             this._queryFactory = queryFactory;
+            this._userTranslator = userTranslator;
         }
 
         #region "Fields"
@@ -119,11 +121,16 @@ namespace nHibernate.Membership.Provider
 
         public override void UpdateUser(MembershipUser user)
         {
-            throw new NotImplementedException();
+            var translatedUser = _userTranslator.TranslateToUser(user);
+            _repository.Save<User>(translatedUser);
         }
 
-        public override bool ValidateUser(string username, string password)
+        public override bool ValidateUser(string userName, string password)
         {
+            //var query = _queryFactory.createFindUserByUsernameQuery(userName, "myApp");
+            //var user = _repository.GetOne<User>(query);
+
+            //return false;
             throw new NotImplementedException();
         }
 
@@ -210,7 +217,7 @@ namespace nHibernate.Membership.Provider
         {
             var user = _repository.GetOne<User>(query);
             if (user == null) return null;
-            return createMembershipUser(user);
+            return _userTranslator.TranslateToMemberShipUser(user);
         }
 
         private MembershipUserCollection FindUsersByQuery(QueryBase<User> query)
@@ -227,32 +234,20 @@ namespace nHibernate.Membership.Provider
             return BuildUserCollectionFromQueryResults(users);
         }
 
-        private static MembershipUserCollection BuildUserCollectionFromQueryResults(IQueryable<User> users)
+        private MembershipUserCollection BuildUserCollectionFromQueryResults(IQueryable<User> users)
         {
             var userCollection = new MembershipUserCollection();
             users.ToList().ForEach(user =>
-                                   userCollection.Add(createMembershipUser(user))
+                                   userCollection.Add(_userTranslator.TranslateToMemberShipUser(user))
                 );
             return userCollection;
-        }
-
-        private static MembershipUser createMembershipUser(User user)
-        {
-            return new MembershipUser("nHibernateMembershipProvider",
-                                        user.Username, user.Id, user.Email,
-                                        user.PasswordQuestion, user.Comment,
-                                        user.IsApproved, user.IsLockedOut,
-                                        user.CreationDate, user.LastLoginDate,
-                                        user.LastActivityDate,
-                                        user.LastPasswordChangedDate,
-                                        user.LastLockedOutDate);
         }
 
         private MembershipUser CheckUserForActivityUpdate(User user, bool userIsOnline)
         {
             if (user == null) return null;
             UpdateUserLastActivityDate(userIsOnline, user);
-            return createMembershipUser(user);        
+            return _userTranslator.TranslateToMemberShipUser(user);        
         }
 
         private void UpdateUserLastActivityDate(bool userIsOnline, User user)

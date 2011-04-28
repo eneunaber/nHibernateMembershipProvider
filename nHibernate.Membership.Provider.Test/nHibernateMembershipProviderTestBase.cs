@@ -10,6 +10,7 @@ namespace nHibernate.Membership.Provider.Test
         protected Mock<ISession> _session;
         protected Mock<IQueryFactory> _queryFactory;
         protected nHibernateMembershipProvider testObject;
+        protected IUserTranslator _userTranslator;
 
 
         public nHibernateMembershipProviderTestBase()
@@ -18,7 +19,8 @@ namespace nHibernate.Membership.Provider.Test
             _repository = new Mock<IRepository>();
             _session = new Mock<ISession>();
             _queryFactory = new Mock<IQueryFactory>();
-            testObject = new nHibernateMembershipProvider(_repository.Object, _queryFactory.Object);
+            _userTranslator = new UserTranslator();
+            testObject = new nHibernateMembershipProvider(_repository.Object, _queryFactory.Object, _userTranslator);
 
         }
     }
