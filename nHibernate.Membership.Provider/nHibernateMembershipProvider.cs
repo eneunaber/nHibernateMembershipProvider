@@ -6,7 +6,13 @@ using nHibernate.Membership.Provider.Queries;
 
 namespace nHibernate.Membership.Provider
 {
-    public class nHibernateMembershipProvider : MembershipProvider
+    public interface ICustomMembershipProvider {
+        byte[] ProviderDecryptPassword(byte[] encodedPassword);
+        byte[] ProviderEncryptPassword(byte[] password);
+        MembershipPasswordFormat PasswordFormat {get;}
+    }
+
+    public class nHibernateMembershipProvider : MembershipProvider, ICustomMembershipProvider
     {
         private IRepository _repository;
         private IQueryFactory _queryFactory;
@@ -90,6 +96,16 @@ namespace nHibernate.Membership.Provider
         }
         #endregion
 
+        public byte[] ProviderDecryptPassword(byte[] encodedPassword) {
+            return DecryptPassword(encodedPassword);
+        }
+
+        public byte[] ProviderEncryptPassword(byte[] password)
+        {
+            return EncryptPassword(password);
+        }
+
+    
         #region "Public Overridden Members"
         public override MembershipUser CreateUser(string username, string password, string email,
                                                   string passwordQuestion, string passwordAnswer, bool isApproved,
@@ -127,11 +143,10 @@ namespace nHibernate.Membership.Provider
 
         public override bool ValidateUser(string userName, string password)
         {
-            //var query = _queryFactory.createFindUserByUsernameQuery(userName, "myApp");
-            //var user = _repository.GetOne<User>(query);
+            var query = _queryFactory.createFindValidatedUserByUsernameQuery(userName, "myApp");
+            var user = _repository.GetOne<User>(query);
 
-            //return false;
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool UnlockUser(string userName)

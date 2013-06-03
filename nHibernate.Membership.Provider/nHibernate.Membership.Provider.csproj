@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{53D471A4-BDF8-4B25-9491-B677697CDCAF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nHibernate.Membership.Provider</RootNamespace>
+    <AssemblyName>nHibernate.Membership.Provider</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Remotion.Data.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomMembershipProvider.cs" />
+    <Compile Include="IPasswordChecker.cs" />
+    <Compile Include="IPasswordEncoding.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="IUserTranslator.cs" />
+    <Compile Include="nHibernateMembershipProvider.cs" />
+    <Compile Include="PasswordChecker.cs" />
+    <Compile Include="PasswordEncoding.cs" />
+    <Compile Include="Queries\FindValidatedUserByUsernameQuery.cs" />
+    <Compile Include="Queries\FindUserByUsernameQuery.cs" />
+    <Compile Include="Queries\FindUserByEmailQuery.cs" />
+    <Compile Include="Queries\FindAllUsersQuery.cs" />
+    <Compile Include="Queries\IQueryFactory.cs" />
+    <Compile Include="Queries\QueryFactory.cs" />
+    <Compile Include="Queries\UsersLastActivityQuery.cs" />
+    <Compile Include="Queries\FindUsersWithEmailLikeQuery.cs" />
+    <Compile Include="Queries\FindUsersWithNameLikeQuery.cs" />
+    <Compile Include="QueryBase.cs" />
+    <Compile Include="Repository.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserTranslator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Sql\Create.Users.Table.SqlLite.sql" />
+    <Content Include="Sql\Create.Users.Table.SQLServer.sql" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

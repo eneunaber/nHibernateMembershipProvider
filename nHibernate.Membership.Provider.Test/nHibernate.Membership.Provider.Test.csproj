@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{494731F7-D130-4A8E-972A-5EAF7904F27F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nHibernate.Membership.Provider.Test</RootNamespace>
+    <AssemblyName>nHibernate.Membership.Provider.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\Libraries\Moq.4.0.10531.7-bin\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\..\Libraries\fluentnhibernate-NH3.0-binary-1.2.0.694\Remotion.Data.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\Libraries\StructureMap2.6.1\deploy\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.AutoMocking">
+      <HintPath>..\..\Libraries\StructureMap2.6.1\deploy\StructureMap.AutoMocking.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\Libraries\xunit-1.6.1\xunit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="nHibernateMembershipProvider_UpdateUserTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_ValidateUserTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_UnlockUserTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_GetUserTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_GetUserNameByEmailTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_DeleteUserTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_GetAllUsersTest.cs" />
+    <Compile Include="nHibernateMembershipProviderTestBase.cs" />
+    <Compile Include="nHibernateMembershipProvider_GetNumberOfUsersOnlineTest.cs" />
+    <Compile Include="Queries\FindValidatedUserByUsernameQueryTest.cs" />
+    <Compile Include="Queries\FindUserByUsernameQueryTest.cs" />
+    <Compile Include="Queries\FindUserByEmailQueryTest.cs" />
+    <Compile Include="Queries\FindAllUsersQueryTest.cs" />
+    <Compile Include="Queries\FindUsersWithNameLikeQueryTest.cs" />
+    <Compile Include="Queries\FindUsersWithEmailLikeQueryTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_FindUsersWithNameLikeTest.cs" />
+    <Compile Include="InMemoryDatabaseTest.cs" />
+    <Compile Include="nHibernateMembershipProvider_FindUsersWithEmailLikeTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\UsersLastActivityQueryTest.cs" />
+    <Compile Include="TestDataHelper.cs" />
+    <Compile Include="UserTranslatorTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nHibernate.Membership.Provider\nHibernate.Membership.Provider.csproj">
+      <Project>{53D471A4-BDF8-4B25-9491-B677697CDCAF}</Project>
+      <Name>nHibernate.Membership.Provider</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_Data\nHibernateMembership.s3db" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Notes.txt" />
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

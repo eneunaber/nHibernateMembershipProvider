@@ -34,5 +34,10 @@ namespace nHibernate.Membership.Provider.Queries
         {
             return new FindUserByUsernameQuery(username, appName);
         }
+
+        public QueryBase<User> createFindValidatedUserByUsernameQuery(string username, string appName)
+        {
+            return new FindValidatedUserByUsernameQuery(username, appName);
+        }
     }
 }

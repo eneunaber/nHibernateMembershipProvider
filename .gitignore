@@ -1,8 +1,6 @@
 backup
 bin
 obj
-Properties
-*.csproj
 *.user
 *.config
 *.suo
